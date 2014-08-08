@@ -102,7 +102,8 @@ class CleanedDataFormValidation(FormValidation):
         if form.is_valid():
             # We're different here & relying on having a reference to the same
             # bundle the rest of the process is using.
-            bundle.data = form.cleaned_data
+            # but form.cleaned_data is empty in some case's. 
+            # Lets leave data unchanged 
             return {}
 
         # The data is invalid. Let's collect all the error messages & return
