@@ -626,6 +626,18 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
 
         return auth_result
 
+    def authorized_read_schema(self, object_list, bundle):
+        """
+        Handles checking of permissions to see if the user has authorization
+        to GET this resource schema.
+        """
+        try:
+            auth_result = self._meta.authorization.read_schema(object_list, bundle)
+            if not auth_result is True:
+                raise Unauthorized()
+        except Unauthorized as e:
+            self.unauthorized_result(e)
+
     def authorized_update_list(self, object_list, bundle):
         """
         Handles checking of permissions to see if the user has authorization
@@ -1662,7 +1674,7 @@ class Resource(six.with_metaclass(DeclarativeMetaclass)):
         self.throttle_check(request)
         self.log_throttled_access(request)
         bundle = self.build_bundle(request=request)
-        self.authorized_read_detail(self.get_object_list(bundle.request), bundle)
+        self.authorized_read_schema(self.get_object_list(bundle.request), bundle)
         return self.create_response(request, self.build_schema())
 
     def get_multiple(self, request, **kwargs):

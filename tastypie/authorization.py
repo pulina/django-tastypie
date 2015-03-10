@@ -58,6 +58,15 @@ class Authorization(object):
         """
         return True
 
+    def read_schema(self, object_list, bundle):
+        """
+        Returns either ``True`` if the user is allowed to view schema
+        or throw ``Unauthorized`` if they are not.
+
+        Returns by default value same as read_detail().
+        """
+        return self.read_detail()
+
     def update_list(self, object_list, bundle):
         """
         Returns a list of all the objects a user is allowed to update.
